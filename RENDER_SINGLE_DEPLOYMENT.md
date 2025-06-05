@@ -16,11 +16,10 @@ JWT_SECRET=your-super-secret-jwt-key-make-it-very-long-and-random
 # Environment Mode
 NODE_ENV=production
 
-# API URL for React App (use relative path for single service)
-REACT_APP_API_URL=/api
-
 # Google Gemini AI API Key
 REACT_APP_GEMINI_API_KEY=your_gemini_api_key
+
+# Note: REACT_APP_API_URL is automatically detected and not needed for single-service deployment
 ```
 
 ## 🛠️ Render Service Configuration
@@ -50,7 +49,6 @@ Add the following environment variables in the Render dashboard:
 MONGODB_URI = mongodb+srv://your-username:your-password@your-cluster.mongodb.net/blog
 JWT_SECRET = your-super-secret-jwt-key-123456789
 NODE_ENV = production
-REACT_APP_API_URL = /api
 REACT_APP_GEMINI_API_KEY = your_gemini_api_key
 ```
 

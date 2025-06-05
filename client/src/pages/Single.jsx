@@ -8,6 +8,7 @@ import moment from "moment";
 import { useContext } from "react";
 import { AuthContext } from "../context/authContext";
 import DOMPurify from "dompurify";
+import { getImageUrl } from "../utils/apiUtils";
 
 const Single = () => {
   const [post, setPost] = useState({});
@@ -48,7 +49,7 @@ const Single = () => {
   return (
     <div className="single">
       <div className="content">
-        <img src={`${process.env.REACT_APP_API_URL || 'http://localhost:8000'}/upload/${post?.img}`} alt="" />
+        <img src={getImageUrl(post?.img)} alt="" />
         <div className="user">
           {post.userImg && <img
             src={post.userImg}

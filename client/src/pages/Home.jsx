@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import api from "../api";
+import { getImageUrl } from "../utils/apiUtils";
 
 const Home = () => {
   const [posts, setPosts] = useState([]);
@@ -31,11 +32,7 @@ const Home = () => {
           <div className="post" key={post.id}>
             <div className="img">
               <img
-                src={
-                  post?.img
-                    ? `${process.env.REACT_APP_API_URL || 'http://localhost:8000'}/upload/${post.img}`
-                    : ""
-                }
+                src={getImageUrl(post?.img)}
                 alt=""
               />
             </div>

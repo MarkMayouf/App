@@ -1,6 +1,7 @@
 import api from '../api'
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { getImageUrl } from '../utils/apiUtils'
 
 const Menu = ({ cat }) => {
   const [posts, setPosts] = useState([])
@@ -47,7 +48,7 @@ const Menu = ({ cat }) => {
       <h1>Other posts you may like</h1>
       {posts.map((post) => (
         <div className='post' key={post.id}>
-          <img src={`${process.env.REACT_APP_API_URL || 'http://localhost:8000'}/upload/${post?.img}`} alt='' />
+          <img src={getImageUrl(post?.img)} alt='' />
           <h2>{post.title}</h2>
           <Link className='link' to={`/post/${post.id}`}>
             <button>Read More</button>
