@@ -1,0 +1,45 @@
+{
+  "name": "blog-application-mongo",
+  "version": "1.0.0",
+  "description": "Full-stack blog application with MongoDB and AI writing assistant",
+  "main": "api/index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "concurrently \"npm run dev:api\" \"npm run dev:client\"",
+    "dev:api": "cd api && npm run dev",
+    "dev:client": "cd client && npm start",
+    "build": "npm run install:all && npm run build:client",
+    "build:client": "cd client && npm run build",
+    "start": "cd api && npm start",
+    "install:all": "npm install && cd api && npm install && cd ../client && npm install",
+    "test": "cd api && npm test && cd ../client && npm test",
+    "clean": "rm -rf node_modules api/node_modules client/node_modules",
+    "render-build": "npm run install:all && npm run build:client"
+  },
+  "keywords": [
+    "blog",
+    "mongodb",
+    "react",
+    "express",
+    "ai",
+    "writing-assistant",
+    "full-stack"
+  ],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yourusername/blog-application-mongo.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yourusername/blog-application-mongo/issues"
+  },
+  "homepage": "https://github.com/yourusername/blog-application-mongo#readme"
+} 
