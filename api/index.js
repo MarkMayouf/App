@@ -57,13 +57,6 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
-// Serve uploaded files statically
-const staticPath = process.env.NODE_ENV === 'production'
-  ? path.join(__dirname, "uploads")
-  : path.join(__dirname, "../client/public/upload");
-
-app.use("/upload", express.static(staticPath));
-
 // File upload endpoint
 app.post("/api/upload", upload.single("file"), function (req, res) {
   if (!req.file) {
@@ -79,12 +72,19 @@ app.post("/api/upload", upload.single("file"), function (req, res) {
 app.use("/api/auth", authRoutes);
 app.use("/api/posts", postRoutes);
 
+// Serve uploaded files statically (MUST be before React routing)
+const staticPath = process.env.NODE_ENV === 'production'
+  ? path.join(__dirname, "uploads")
+  : path.join(__dirname, "../client/public/upload");
+
+app.use("/upload", express.static(staticPath));
+
 // Serve React build files in production
 if (process.env.NODE_ENV === 'production') {
   // Serve static files from React build
   app.use(express.static(path.join(__dirname, '../client/build')));
   
-  // Handle React routing - send all non-API requests to React app
+  // Handle React routing - send all non-API requests to React app (MUST be last)
   app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
   });

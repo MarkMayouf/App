@@ -35,5 +35,14 @@ export const getImageBaseUrl = () => {
 // Helper function to get full image URL
 export const getImageUrl = (imagePath) => {
   if (!imagePath) return '';
-  return `${getImageBaseUrl()}/upload/${imagePath}`;
+  
+  const baseUrl = getImageBaseUrl();
+  const fullUrl = `${baseUrl}/upload/${imagePath}`;
+  
+  // Debug logging in development
+  if (process.env.NODE_ENV === 'development') {
+    console.log('Image URL generated:', fullUrl, 'for path:', imagePath);
+  }
+  
+  return fullUrl;
 }; 

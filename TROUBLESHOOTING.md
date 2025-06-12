@@ -67,14 +67,39 @@ MongoDB connection error: MongooseError
 ### 5. Image Upload/Display Issues
 
 **Symptoms:**
-- Images don't display
+- Images don't display on home page
 - Upload fails
 - Broken image links
+- "Failed to load image" error messages
 
 **Solutions:**
+
+#### A. Images Not Showing in Production
+- **Problem**: `/upload` route conflicts with React routing
+- **Solution**: Ensure `/upload` static serving comes BEFORE React's `app.get('*')` route in Express
+- **Fix Applied**: Moved upload serving after API routes but before React routing
+
+#### B. Images Not Showing in Development
+- **Problem**: Images uploaded to wrong directory or wrong URL generation
+- **Development**: Images should be in `client/public/upload/`
+- **Production**: Images should be in `api/uploads/`
+- **Solution**: Check `getImageUrl()` function is generating correct URLs
+
+#### C. Console Debugging
+- Check browser console for image URL generation (in development)
+- Look for error messages like "Failed to load image: [URL]"
+- Use the new `BlogImage` component which shows loading states
+
+#### D. Upload Directory Issues
 - Check if upload directory exists and has write permissions
-- Verify image URLs are using correct base path
+- **Development**: `client/public/upload/` should exist
+- **Production**: `api/uploads/` will be created automatically
 - Remember: Render's filesystem is ephemeral (files deleted on restart)
+
+#### E. URL Generation Issues
+- In development: URLs should be `http://localhost:8000/upload/filename.jpg`
+- In production: URLs should be `/upload/filename.jpg` (relative)
+- Check `getImageBaseUrl()` function in `client/src/utils/apiUtils.js`
 
 ### 6. Build Failures
 

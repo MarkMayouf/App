@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import api from "../api";
-import { getImageUrl } from "../utils/apiUtils";
+import BlogImage from "../components/BlogImage";
 
 const Home = () => {
   const [posts, setPosts] = useState([]);
@@ -31,9 +31,10 @@ const Home = () => {
         {posts.map((post) => (
           <div className="post" key={post.id}>
             <div className="img">
-              <img
-                src={getImageUrl(post?.img)}
-                alt=""
+              <BlogImage 
+                imagePath={post?.img}
+                alt={post?.title || "Blog post"}
+                fallbackText="No image available"
               />
             </div>
             <div className="content">

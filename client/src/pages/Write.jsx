@@ -41,6 +41,9 @@ const Write = () => {
   
   // AI Chatbox state - controls visibility of the AI assistant
   const [isChatboxOpen, setIsChatboxOpen] = useState(false);
+  
+  // Loading state for publish button
+  const [isPublishing, setIsPublishing] = useState(false);
 
   // Navigation and authentication hooks
   const navigate = useNavigate();
@@ -70,16 +73,37 @@ const Write = () => {
   const handleClick = async (e) => {
     e.preventDefault();
 
+    // Prevent double-clicking
+    if (isPublishing) return;
+
     // Ensure user is authenticated before allowing publication
     if (!currentUser) {
       alert("Please log in to publish.");
       return;
     }
 
-    // Upload image if file is selected, otherwise use existing image URL
-    const imgUrl = file ? await upload() : state?.img || ""
+    // Validate required fields
+    if (!title.trim()) {
+      alert("Please enter a title for your post.");
+      return;
+    }
+
+    if (!value.trim()) {
+      alert("Please add some content to your post.");
+      return;
+    }
+
+    if (!cat) {
+      alert("Please select a category for your post.");
+      return;
+    }
+
+    setIsPublishing(true);
 
     try {
+      // Upload image if file is selected, otherwise use existing image URL
+      const imgUrl = file ? await upload() : state?.img || "";
+
       if (state) {
         // Update existing article
         await api.put(`/posts/${state.id}`, {
@@ -88,6 +112,7 @@ const Write = () => {
           cat,
           img: imgUrl,
         });
+        alert("Post updated successfully!");
       } else {
         // Create new article with current timestamp
         await api.post(`/posts/`, {
@@ -97,12 +122,26 @@ const Write = () => {
           img: imgUrl,
           date: moment(Date.now()).format("YYYY-MM-DD HH:mm:ss"),
         });
+        alert("Post published successfully!");
       }
 
       // Navigate back to home page after successful publication
       navigate("/");
     } catch (err) {
-      console.log(err);
+      console.error("Error publishing post:", err);
+      
+      // Show user-friendly error message
+      if (err.response?.data?.message) {
+        alert("Error publishing post: " + err.response.data.message);
+      } else if (err.response?.status === 401) {
+        alert("Your session has expired. Please log in again.");
+      } else if (err.response?.status === 403) {
+        alert("You don't have permission to perform this action.");
+      } else {
+        alert("An error occurred while publishing your post. Please try again.");
+      }
+    } finally {
+      setIsPublishing(false);
     }
   };
 
@@ -214,9 +253,9 @@ const Write = () => {
             Upload Image
           </label>
           <div className="buttons">
-            <button disabled={!currentUser}>Save as a draft</button>
-            <button onClick={handleClick} disabled={!currentUser}>
-              Publish
+            <button disabled={!currentUser || isPublishing}>Save as a draft</button>
+            <button onClick={handleClick} disabled={!currentUser || isPublishing}>
+              {isPublishing ? "Publishing..." : "Publish"}
             </button>
           </div>
           {/* Authentication prompt for non-logged-in users */}
